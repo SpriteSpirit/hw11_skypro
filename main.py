@@ -9,9 +9,10 @@ class Question:
         self.correct_answer = correct_answer
         self.asked = False
         self.user_response = None
-        self.points = self.get_points()
+        self._points = self.points
 
-    def get_points(self) -> int:
+    @property
+    def points(self) -> int:
         """Возвращает количество баллов в зависимости от сложности: 1-10 б, за 5-50 б"""
 
         return self.difficulty * 10
@@ -19,7 +20,7 @@ class Question:
     def is_correct(self) -> bool:
         """Возвращает True, если ответ пользователя совпадает с верным ответов иначе False."""
 
-        return True if self.user_response == self.correct_answer else False
+        return self.user_response == self.correct_answer
 
     def get_question(self) -> str:
         """Возвращает вопрос пользователю в шаблонном виде"""
@@ -30,7 +31,7 @@ class Question:
         """Возвращает результат проверки ответа:
         Ответ верный/неверный, получено __ баллов"""
 
-        return f"Ответ верный, получено {self.get_points()} баллов" if self.is_correct() \
+        return f"Ответ верный, получено {self.points} баллов" if self.is_correct() \
             else f"Ответ неверный, верный ответ {self.correct_answer}"
 
 
