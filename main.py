@@ -4,12 +4,11 @@ import requests
 
 class Question:
     def __init__(self, text: str, difficulty: int, correct_answer: str):
-        self.text = text
+        self._text = text
         self.difficulty = int(difficulty)
         self.correct_answer = correct_answer
-        self.asked = False
-        self.user_response = None
         self._points = self.points
+        self.user_response = None
 
     @property
     def points(self) -> int:
@@ -17,15 +16,16 @@ class Question:
 
         return self.difficulty * 10
 
+    @property
+    def text(self) -> str:
+        """Возвращает вопрос пользователю в шаблонном виде"""
+
+        return f"Вопрос: {self._text}\nСложность {self.difficulty}/5"
+
     def is_correct(self) -> bool:
         """Возвращает True, если ответ пользователя совпадает с верным ответов иначе False."""
 
         return self.user_response == self.correct_answer
-
-    def get_question(self) -> str:
-        """Возвращает вопрос пользователю в шаблонном виде"""
-
-        return f"Вопрос: {self.text}\nСложность {self.difficulty}/5"
 
     def get_feedback(self) -> str:
         """Возвращает результат проверки ответа:
@@ -58,7 +58,7 @@ def do_quiz(list_questions: list) -> tuple[int, int]:
     shuffle(questions)
 
     for question in list_questions:
-        print(question.get_question())
+        print(question.text)
         user_answer = input("Ответ: ")
         question.user_response = user_answer
 
