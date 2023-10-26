@@ -21,12 +21,12 @@ class Question:
 
         return True if self.user_response == self.correct_answer else False
 
-    def build_question(self) -> str:
+    def get_question(self) -> str:
         """Возвращает вопрос пользователю в шаблонном виде"""
 
         return f"Вопрос: {self.text}\nСложность {self.difficulty}/5"
 
-    def build_feedback(self) -> str:
+    def get_feedback(self) -> str:
         """Возвращает результат проверки ответа:
         Ответ верный/неверный, получено __ баллов"""
 
@@ -49,7 +49,7 @@ def get_data_and_create_quiz(json_link: str) -> list:
     return list_questions
 
 
-def ask_questions(list_questions: list) -> tuple[int, int]:
+def do_quiz(list_questions: list) -> tuple[int, int]:
     """Функционал викторины: баллы, перемешанные вопросы по порядку, ответ пользователя, проверка"""
 
     total_points = 0
@@ -57,17 +57,17 @@ def ask_questions(list_questions: list) -> tuple[int, int]:
     shuffle(questions)
 
     for question in list_questions:
-        print(question.build_question())
+        print(question.get_question())
         user_answer = input("Ответ: ")
         question.user_response = user_answer
 
         if question.is_correct():
-            print(question.build_feedback())
+            print(question.get_feedback())
             total_points += question.points
             result.append(True)
             input("\nНажмите Enter, чтобы продолжить\n")
         else:
-            print(question.build_feedback())
+            print(question.get_feedback())
             input("\nНажмите Enter, чтобы продолжить\n")
 
     return total_points, len(result)
@@ -77,10 +77,12 @@ def this_is_the_end(all_points: int, all_questions: int, answers: int) -> None:
     """Завершаем викторину и подводим итог"""
     print("Вот и всё!")
     print(f"Отвечено верно на {answers} вопросов из {all_questions}")
-    print(f"Набрано {all_points} баллов")
+    print(f"Набрано {all_points} баллов\n")
 
 
 # запуск викторины с передачей ссылки на json-вопросы и итоги
 questions = get_data_and_create_quiz("https://www.jsonkeeper.com/b/ZGUO")
-points, results = ask_questions(questions)
+points, results = do_quiz(questions)
 this_is_the_end(points, len(questions), results)
+
+input("Press any key to continue...")
