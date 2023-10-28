@@ -23,20 +23,19 @@ class Question:
         return f"Вопрос: {self._text}\nСложность {self.difficulty}/5"
 
     def is_correct(self) -> bool:
-        """Возвращает True, если ответ пользователя совпадает с верным ответов иначе False."""
+        """Возвращает True, если ответ пользователя совпадает с верным ответом, иначе False."""
 
         return self.user_response == self.correct_answer
 
     def get_feedback(self) -> str:
-        """Возвращает результат проверки ответа:
-        Ответ верный/неверный, получено __ баллов"""
+        """Возвращает результат проверки ответа"""
 
         return f"Ответ верный, получено {self.points} баллов" if self.is_correct() \
             else f"Ответ неверный, верный ответ {self.correct_answer}"
 
 
 def get_data_and_create_quiz(json_link: str) -> list:
-    """По ссылке получает список всех вопросов, вопросы считываются и раскладываются в экземпляры класса Question.
+    """По ссылке получает список всех вопросов - они считываются и раскладываются в экземпляры класса Question.
     Которые в свою очередь, складываются в список"""
 
     response = requests.get(json_link)
@@ -55,6 +54,7 @@ def do_quiz(list_questions: list) -> tuple[int, int]:
 
     total_points = 0
     result = []
+
     shuffle(questions)
 
     for question in list_questions:
@@ -74,8 +74,9 @@ def do_quiz(list_questions: list) -> tuple[int, int]:
     return total_points, len(result)
 
 
-def this_is_the_end(all_points: int, all_questions: int, answers: int) -> None:
+def get_results(all_points: int, all_questions: int, answers: int) -> None:
     """Завершаем викторину и подводим итог"""
+
     print("Вот и всё!")
     print(f"Отвечено верно на {answers} вопросов из {all_questions}")
     print(f"Набрано {all_points} баллов\n")
@@ -84,6 +85,7 @@ def this_is_the_end(all_points: int, all_questions: int, answers: int) -> None:
 # запуск викторины с передачей ссылки на json-вопросы и итоги
 questions = get_data_and_create_quiz("https://www.jsonkeeper.com/b/ZGUO")
 points, results = do_quiz(questions)
-this_is_the_end(points, len(questions), results)
+get_results(points, len(questions), results)
 
-input("Press any key to continue...")
+input("Press any key to exit...")
+quit()
